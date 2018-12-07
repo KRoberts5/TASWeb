@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Punch Entry</title>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        
+        <p><a href="index.html">Daily Punch Lookup</a>&nbsp;<a href="index2.html">Punch Insertion</a></p>
+        
+        <form name="punchentryform" id="punchentryform" onsubmit="return submitPunchEntryForm();">
+            
+            <table>
+            <tr><td>Badge ID:</td><td><input type="text" name="badgeid" tabindex="1" size="10" value="28DC3FB8"></td></tr>
+            <tr><td>Date:</td><td><input type="date" name="punchdate" tabindex="2" value="2018-11-12"></td></tr>
+            <tr><td>Time:</td><td><input type="time" name="punchtime" tabindex="3" value="07:00"></td></tr>
+            <tr><td>Type:</td><td><input type="radio" name="punchtype" tabindex="4" value="1" checked> Clock In<input type="radio" name="punchtype" tabindex="5" value="0"> Clock Out</td></tr>
+            <tr><td>Terminal ID:</td><td><input type="text" name="terminalid" tabindex="6" value="0"></td></tr>
+            </table>
+            <input type="submit" value="Submit">
+            
+        </form>
+        
+        <p id="jsontarget"></p>
+        
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+                
+                //getData();
+
+            });
+            
+            var submitPunchEntryForm = function() {
+
+                $.ajax({
+
+                    url: "PunchEntry",
+                    method: "POST",
+                    data: $("#punchentryform").serialize(),
+                    dataType: "json"
+                    
+                }).done(function( json ) {
+
+                    $("#jsontarget").empty();
+
+                    var id = json["id"];
+
+                    $("#jsontarget").html("<p>Punch added successfully!  ID: " + id + "</p>");
+
+
+                });
+
+                return false;
+
+            };
+
+        </script>
+        
+    </body>
+
+</html>

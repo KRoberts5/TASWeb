@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/TASWeb">
+    
+    <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" useSSL='false' initialSize="10" logAbandoned="true" maxActive="100" maxIdle="50" maxWait="10000" minIdle="10" name="jdbc/tas_db" autoReconnect='true' removeAbandoned="true" removeAbandonedTimeout="60" testOnBorrow="true" testOnReturn="false" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/tas?zeroDateTimeBehavior=convertToNull" validationQuery="SELECT 1" validationQueryTimeout="-1" username="tasuser" password="taspassword"/>
+    
+</Context>

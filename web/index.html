@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>JSON Test</title>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script type="text/javascript" src="http://momentjs.com/downloads/moment.js"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+            
+            #jsontarget table, #jsontarget th, #jsontarget td {
+                border: 1px solid black;
+                text-align: center;
+            }
+            
+        </style>
+    </head>
+    <body>
+        
+        <p><a href="index.html">Daily Punch Lookup</a>&nbsp;<a href="index2.html">Punch Insertion</a></p>
+        
+        <form name="punchlookupform" id="punchlookupform" onsubmit="return submitPunchLookupForm();">
+            <table>
+            <tr><td>Badge ID:</td><td><input type="text" name="badgeid" tabindex="1" size="10" value="28DC3FB8"></td></tr>
+            <tr><td>Pay Period:</td><td><input type="date" name="punchdate" tabindex="2" value="2018-09-07"></td></tr>
+            </table>
+            <input type="submit" value="Submit">
+        </form>
+        
+        <p id="jsontarget"></p>
+        
+        <script type="text/javascript">
+
+            $(document).ready(function () {
+                
+                //getData();
+
+            });
+            
+            var submitPunchLookupForm = function() {
+
+                $.ajax({
+
+                    url: "PunchLookup",
+                    method: "POST",
+                    data: $("#punchlookupform").serialize(),
+                    dataType: "json"
+
+                }).done(function( json ) {
+                    
+                    $("#jsontarget").empty();
+                    
+                    var punchtype;
+                    
+                    var table = "<table>";
+                    table += "<thead><tr><th>ID</th><th>Badge ID</th><th>Terminal ID</th><th>Type</th><th>Original</th><th>Adjusted</th><th>Adjustment Type</th></tr></thead>";
+                    table += "<tbody>";
+                    
+                    for (var i = 0; i < (json.length - 1); ++i) {
+                        
+                        punchtype = "";
+                        
+                        table += "<tr>";
+                        
+                        table += "<td>#" + json[i]["id"] + "</td>";
+                        table += "<td>" + json[i]["badgeid"] + "</td>";
+                        table += "<td>" + json[i]["terminalid"] + "</td>";
+                        
+                        switch (json[i]["punchtypeid"]) {
+                            case "0":
+                                punchtype = "Clocked Out";
+                                break;
+                            case "1":
+                                punchtype = "Clocked In";
+                                break;
+                            case "2":
+                                punchtype = "Timed Out";
+                                break;
+                        }
+                        
+                        table += "<td>" + punchtype + "</td>";
+                        
+                        var ots = moment(new Date(parseInt(json[i]["originaltimestamp"])));
+                        var ats = moment(new Date(parseInt(json[i]["adjustedtimestamp"])));
+                        
+                        table += "<td>" + ots.format("ddd MM/DD/YYYY hh:mm:ss A") + "</td>";
+                        table += "<td>" + ats.format("ddd MM/DD/YYYY hh:mm:ss A") + "</td>";
+                        
+                        table += "<td>" + json[i]["punchdata"] + "</td>";
+                        
+                        table += "</tr>";
+                        
+                    }
+                    
+                    table += "</tbody></table>";
+                    
+                    $(table).appendTo("#jsontarget");
+
+                });
+                
+                return false;
+
+            };
+
+        </script>
+        
+    </body>
+
+</html>
